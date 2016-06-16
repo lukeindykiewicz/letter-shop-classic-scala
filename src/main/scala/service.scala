@@ -9,13 +9,11 @@ trait PromotionService {
 
   val threeForTwo: String => Double = { letters =>
     val promoLetter = Set('a', 'X')
+    val threes: Seq[Char] => Int = _.grouped(3).toSeq.filter(_.size == 3).size
     letters.toSeq
       .groupBy(x => x)
       .filter { case (c, cs) => promoLetter.contains(c) }
-      .map { case (c, cs) => c -> cs.grouped(3).toList }
-      .map { case (c, cs) => c -> cs.filter(_.size == 3) }
-      .map { case (c, cs) => c -> cs.size }
-      .map { case (c, cs) => c -> cs * p(c.toString) }
+      .map { case (c, cs) => c -> threes(cs) * p(c.toString) }
       .values
       .sum
   }
